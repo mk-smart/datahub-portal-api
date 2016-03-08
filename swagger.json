@@ -1,0 +1,656 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is the documentation of the MK:Smart Data Hub API. You can find out more about MK:Smart at [http://mksmart.org](http://mksmart.org)",
+        "version": "1.0.0",
+        "title": "MK Data Hub API",
+        "termsOfService": "http://datahub.mksmart.org",
+        "contact": {
+            "email": "enrico.daga@open.ac.uk"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        }
+    },
+    "schemes": [
+        "http"
+    ],
+    "host": "",
+    "basePath": "/wordpress/api",
+    "tags": [
+        {
+            "name": "Data Catalogue",
+            "description": "All about datasets, categories and licenses",
+            "externalDocs": {
+                "description": "List the datasets a user can view. Access dataset metadata.",
+                "url": "#"
+            }
+        },
+        {
+            "name": "Find Data",
+            "description": "About finding data in the datahub",
+            "externalDocs": {
+                "description": "More about finding data",
+                "url": "#"
+            }
+        },
+        {
+            "name": "Provide Data",
+            "description": "About pushing data in the datahub",
+            "externalDocs": {
+                "description": "More about providing data",
+                "url": "#"
+            }
+        }
+    ],
+    "paths": {
+        "/datasets": {
+            "get": {
+                "tags": [
+                    "Data Catalogue",
+                    "Find Data"
+                ],
+                "summary": "List datasets",
+                "description": "List the datasets",
+                "operationId": "catalogueListDatasets",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "type": "string",
+                        "name": "fields",
+                        "default": "id,title,url"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns the list of datasets",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/DatasetItem"
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        }
+    },
+    "securityDefinitions": {
+        "key": {
+            "type": "apiKey",
+            "name": "key",
+            "in": "header"
+        }
+    },
+    "definitions": {
+        "DatasetInfo": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "The name of the dataset"
+                },
+                "categories": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "business",
+                            "crime",
+                            "demography",
+                            "education",
+                            "employment",
+                            "energy",
+                            "environment",
+                            "geo",
+                            "health",
+                            "housing",
+                            "location",
+                            "media",
+                            "public sector",
+                            "sensor",
+                            "social media",
+                            "statistics",
+                            "transport",
+                            "water"
+                        ]
+                    },
+                    "minItems": 1,
+                    "uniqueItems": true
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "uniqueItems": true
+                },
+                "formats": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "ownership": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "sourceWebsite": {
+                    "type": "string"
+                },
+                "sourceName": {
+                    "type": "string"
+                },
+                "pricePlan": {
+                    "type": "string",
+                    "enum": [
+                        "Free"
+                    ]
+                },
+                "licenses": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "flickr-apis-terms-of-use",
+                            "terms-and-conditions-for-information-and-services-at-food-gov-ukratings",
+                            "odc-database-contents-license-dbcl-1-0",
+                            "netatmo-api-terms-of-use",
+                            "other",
+                            "open-database-license-odbl-v1-0",
+                            "os-open-data-license",
+                            "creative-commons-attribution-license",
+                            "open-government-license"
+                        ]
+                    },
+                    "minItems": 1
+                },
+                "statement": {
+                    "type": "string"
+                }
+            }
+        },
+        "DatasetFeed": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "description": "Stream datatype",
+                    "enum": [
+                        "Sensor",
+                        "Event"
+                    ]
+                },
+                "id": {
+                    "type": "string",
+                    "description": "The Feed id",
+                    "readOnly": true
+                },
+                "previewUrl": {
+                    "type": "string",
+                    "description": "Link to the preview feed page in the data hub portal"
+                },
+                "feedUrl": {
+                    "type": "string",
+                    "description": "Feed API url to be used to write/read streams."
+                },
+                "key": {
+                    "type": "string",
+                    "description": "Key (label) used to write to the stream API. If the key name does not match an existing API key, a new one is created and bound to the given label."
+                },
+                "location": {
+                    "type": "string",
+                    "description": "Stream location mode.",
+                    "enum": [
+                        "Fixed",
+                        "Mobile"
+                    ]
+                },
+                "latitute": {
+                    "type": "string",
+                    "format": "float",
+                    "description": "Source location latitude.",
+                    "maximum": 90,
+                    "minimum": -90
+                },
+                "longitude": {
+                    "type": "string",
+                    "format": "float",
+                    "description": "Source location longitude.",
+                    "maximum": 180,
+                    "minimum": -180
+                },
+                "elevation": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "Source location elevation."
+                },
+                "postcode": {
+                    "type": "string",
+                    "description": "Postcode"
+                },
+                "streams": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "$ref": "#/definitions/Stream"
+                    }
+                }
+            }
+        },
+        "UploadedSource": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "readOnly": true
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name of the file"
+                }
+            }
+        },
+        "HttpSource": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "readOnly": true
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name of the file"
+                },
+                "url": {
+                    "type": "string",
+                    "description": "HTTP location of the file"
+                },
+                "updateRate": {
+                    "type": "string",
+                    "description": "Update rate",
+                    "enum": [
+                        "hour",
+                        "daily",
+                        "weekly",
+                        "notify"
+                    ],
+                    "default": "notify"
+                }
+            }
+        },
+        "Stream": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "Stream ID"
+                },
+                "title": {
+                    "type": "string",
+                    "description": "Stream title"
+                },
+                "unitType": {
+                    "type": "string",
+                    "description": "Stream Unit Type",
+                    "enum": [
+                        "Basic SI",
+                        "Derived SI",
+                        "Conversion Based Units",
+                        "Derived Units",
+                        "Context Dependend Units"
+                    ]
+                },
+                "unitName": {
+                    "type": "string",
+                    "description": "Stream Unit Name"
+                },
+                "unitSymbol": {
+                    "type": "string",
+                    "description": "Stream Unit Symbol"
+                },
+                "maximum": {
+                    "type": "string",
+                    "description": "Stream maximum value"
+                },
+                "minimum": {
+                    "type": "string",
+                    "description": "Stream minimum value"
+                }
+            }
+        },
+        "Access": {
+            "type": "object",
+            "properties": {
+                "provider": {
+                    "type": "string"
+                },
+                "everyone": {
+                    "$ref": "#/definitions/AccessPolicy"
+                },
+                "exceptions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/AccessPolicyException"
+                    }
+                }
+            }
+        },
+        "AccessPolicy": {
+            "type": "object",
+            "properties": {
+                "view": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "subscribe": {
+                    "type": "boolean",
+                    "default": false
+                }
+            }
+        },
+        "AccessPolicyException": {
+            "type": "object",
+            "properties": {
+                "user": {
+                    "type": "string"
+                },
+                "view": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "subscribe": {
+                    "type": "boolean",
+                    "default": false
+                }
+            },
+            "required": [
+                "user"
+            ]
+        },
+        "DatasetItem": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/DatasetInfo"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string",
+                            "description": "Dataset UUID",
+                            "readOnly": true
+                        },
+                        "type": {
+                            "type": "string",
+                            "description": "The type of dataset",
+                            "enum": [
+                                "temporal",
+                                "entities"
+                            ],
+                            "readOnly": true
+                        },
+                        "lastModified": {
+                            "type": "string",
+                            "format": "date-time",
+                            "readOnly": true
+                        },
+                        "created": {
+                            "type": "string",
+                            "format": "date-time",
+                            "readOnly": true
+                        },
+                        "pageUrl": {
+                            "type": "string",
+                            "description": "The web page of the dataset",
+                            "readOnly": true
+                        },
+                        "apiUrl": {
+                            "type": "string",
+                            "description": "The url to the dataset json description",
+                            "readOnly": true
+                        }
+                    }
+                }
+            ]
+        },
+        "Dataset": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "Dataset UUID"
+                },
+                "type": {
+                    "type": "string",
+                    "description": "The type of data source",
+                    "enum": [
+                        "temporal",
+                        "entities"
+                    ]
+                },
+                "lastModified": {
+                    "type": "string",
+                    "format": "date-time",
+                    "readOnly": true
+                },
+                "created": {
+                    "type": "string",
+                    "format": "date-time",
+                    "readOnly": true
+                },
+                "pageUrl": {
+                    "type": "string",
+                    "description": "The web page of the dataset",
+                    "readOnly": true
+                },
+                "apiUrl": {
+                    "type": "string",
+                    "description": "The url to the dataset json description",
+                    "readOnly": true
+                },
+                "info": {
+                    "type": "object",
+                    "$ref": "#/definitions/DatasetInfo"
+                },
+                "feed": {
+                    "type": "object",
+                    "$ref": "#/definitions/DatasetFeed"
+                },
+                "access": {
+                    "type": "object",
+                    "$ref": "#/definitions/Access"
+                }
+            },
+            "required": [
+                "id"
+            ]
+        },
+        "DatasetCreateTypeTemporal": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "description": "The type of data source. MUST be 'temporal'",
+                    "enum": [
+                        "temporal"
+                    ]
+                },
+                "info": {
+                    "type": "object",
+                    "$ref": "#/definitions/DatasetInfo"
+                },
+                "feed": {
+                    "type": "object",
+                    "$ref": "#/definitions/DatasetFeed"
+                },
+                "access": {
+                    "type": "object",
+                    "$ref": "#/definitions/Access"
+                }
+            },
+            "required": [
+                "type",
+                "info",
+                "feed"
+            ]
+        },
+        "DatasetCreateTypeEntities": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "description": "The type of data source. MUST be 'entities'",
+                    "enum": [
+                        "entities"
+                    ]
+                },
+                "info": {
+                    "type": "object",
+                    "$ref": "#/definitions/DatasetInfo"
+                },
+                "access": {
+                    "type": "object",
+                    "$ref": "#/definitions/Access"
+                }
+            },
+            "required": [
+                "type",
+                "info"
+            ]
+        },
+        "License": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "readOnly": true
+                },
+                "title": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "pageUrl": {
+                    "type": "string",
+                    "readOnly": true
+                },
+                "apiUrl": {
+                    "type": "string",
+                    "readOnly": true
+                },
+                "permissions": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "distribute",
+                            "modify",
+                            "display"
+                        ]
+                    }
+                },
+                "prohibitions": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "distribute",
+                            "modify",
+                            "display"
+                        ]
+                    }
+                },
+                "duties": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "attribute",
+                            "share alike",
+                            "attach license"
+                        ]
+                    }
+                }
+            },
+            "required": [
+                "id"
+            ]
+        },
+        "Subscription": {
+            "type": "object",
+            "properties": {
+                "key": {
+                    "type": "string",
+                    "readOnly": true
+                },
+                "id": {
+                    "type": "string",
+                    "readOnly": true
+                },
+                "active": {
+                    "type": "boolean",
+                    "readOnly": true
+                }
+            }
+        },
+        "Datasource": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "readOnly": true
+                },
+                "url": {
+                    "type": "string",
+                    "readOnly": true
+                },
+                "dataset": {
+                    "type": "object",
+                    "readOnly": true,
+                    "$ref": "#/definitions/DatasetItem"
+                }
+            }
+        },
+        "ApiResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "externalDocs": {
+        "description": "Find out more about MK:Smart Datahub API",
+        "url": "http://datahub.mksmart.org"
+    }
+}
