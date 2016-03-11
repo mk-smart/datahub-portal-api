@@ -65,7 +65,7 @@
                         "in": "query",
                         "type": "string",
                         "name": "fields",
-                        "default": "id,title,url"
+                        "default": "id,name,apiUrl"
                     }
                 ],
                 "responses": {
@@ -91,7 +91,177 @@
                     }
                 ]
             }
+        },
+        "/dataset/{id}": {
+            "get": {
+                "tags": [
+                    "Data Catalogue",
+                    "Find Data",
+                    "Provide Data"
+                ],
+                "summary": "Find dataset by ID",
+                "description": "Access a dataset metadata.",
+                "operationId": "getDatasetById",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of dataset to return",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Dataset"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID supplied",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Dataset not found",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/dataset/{id}/info": {
+            "get": {
+                "tags": [
+                    "Data Catalogue",
+                    "Provide Data"
+                ],
+                "summary": "Get dataset information",
+                "description": "Returns a single dataset",
+                "operationId": "getDatasetInfoById",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of dataset to return",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/DatasetInfo"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID supplied",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Dataset not found",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error (unexpected)",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/dataset/{id}/access": {
+            "get": {
+                "tags": [
+                    "Data Catalogue",
+                    "Provide Data"
+                ],
+                "summary": "View access policies of dataset",
+                "description": "",
+                "operationId": "getDatasetAccessById",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of dataset to return",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Access"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID supplied",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Dataset not found",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error (unexpected)",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
         }
+        
     },
     "securityDefinitions": {
         "key": {
@@ -388,66 +558,22 @@
                 "user"
             ]
         },
-        "DatasetItem": {
-            "allOf": [
-                {
-                    "$ref": "#/definitions/DatasetInfo"
-                },
-                {
-                    "type": "object",
-                    "properties": {
-                        "id": {
-                            "type": "string",
-                            "description": "Dataset UUID",
-                            "readOnly": true
-                        },
-                        "type": {
-                            "type": "string",
-                            "description": "The type of dataset",
-                            "enum": [
-                                "temporal",
-                                "entities"
-                            ],
-                            "readOnly": true
-                        },
-                        "lastModified": {
-                            "type": "string",
-                            "format": "date-time",
-                            "readOnly": true
-                        },
-                        "created": {
-                            "type": "string",
-                            "format": "date-time",
-                            "readOnly": true
-                        },
-                        "pageUrl": {
-                            "type": "string",
-                            "description": "The web page of the dataset",
-                            "readOnly": true
-                        },
-                        "apiUrl": {
-                            "type": "string",
-                            "description": "The url to the dataset json description",
-                            "readOnly": true
-                        }
-                    }
-                }
-            ]
-        },
-        "Dataset": {
+        "DatasetMeta": {
             "type": "object",
             "properties": {
                 "id": {
                     "type": "string",
-                    "description": "Dataset UUID"
+                    "description": "Dataset UUID",
+                    "readOnly": true
                 },
                 "type": {
                     "type": "string",
-                    "description": "The type of data source",
+                    "description": "The type of dataset",
                     "enum": [
                         "temporal",
                         "entities"
-                    ]
+                    ],
+                    "readOnly": true
                 },
                 "lastModified": {
                     "type": "string",
@@ -468,20 +594,58 @@
                     "type": "string",
                     "description": "The url to the dataset json description",
                     "readOnly": true
-                },
-                "info": {
-                    "type": "object",
+                }
+            }
+        },
+        "DatasetItem": {
+            "allOf": [
+                {
                     "$ref": "#/definitions/DatasetInfo"
                 },
+                {
+                    "$ref": "#/definitions/DatasetMeta"
+                }
+            ]
+        },
+        "DatasetRef": {
+            "type": "object",
+            "properties": {
+                "info": {
+                    "type": "string",
+                    "description": "The url to the dataset info json description",
+                    "readOnly": true
+                },
                 "feed": {
-                    "type": "object",
-                    "$ref": "#/definitions/DatasetFeed"
+                    "type": "string",
+                    "description": "The url to the dataset feed json description (only type 'temporal')",
+                    "readOnly": true
+                },
+                "uploads": {
+                    "type": "string",
+                    "description": "The url to the dataset uploads list json description (only type 'entities')",
+                    "readOnly": true
+                },
+                "urls": {
+                    "type": "string",
+                    "description": "The url to the dataset urls list json description (only type 'entities')",
+                    "readOnly": true
                 },
                 "access": {
-                    "type": "object",
-                    "$ref": "#/definitions/Access"
+                    "type": "string",
+                    "description": "The url to the dataset access json description (only type 'temporal')",
+                    "readOnly": true
                 }
-            },
+            }
+        },
+        "Dataset": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/DatasetRef"
+                },
+                {
+                    "$ref": "#/definitions/DatasetMeta"
+                }
+            ],
             "required": [
                 "id"
             ]
@@ -497,15 +661,12 @@
                     ]
                 },
                 "info": {
-                    "type": "object",
                     "$ref": "#/definitions/DatasetInfo"
                 },
                 "feed": {
-                    "type": "object",
                     "$ref": "#/definitions/DatasetFeed"
                 },
                 "access": {
-                    "type": "object",
                     "$ref": "#/definitions/Access"
                 }
             },
@@ -526,11 +687,9 @@
                     ]
                 },
                 "info": {
-                    "type": "object",
                     "$ref": "#/definitions/DatasetInfo"
                 },
                 "access": {
-                    "type": "object",
                     "$ref": "#/definitions/Access"
                 }
             },
@@ -605,7 +764,11 @@
                     "type": "string",
                     "readOnly": true
                 },
-                "id": {
+                "datasetId": {
+                    "type": "string",
+                    "readOnly": true
+                },
+                "serviceId": {
                     "type": "string",
                     "readOnly": true
                 },
@@ -627,8 +790,6 @@
                     "readOnly": true
                 },
                 "dataset": {
-                    "type": "object",
-                    "readOnly": true,
                     "$ref": "#/definitions/DatasetItem"
                 }
             }

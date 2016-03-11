@@ -2,6 +2,7 @@
   font-size: 1.5em;
   font-weight: bold;
   text-decoration: none;
+  color: transparent;
   background: transparent url(https://datahub.beta.mksmart.org/wp-content/themes/mkdatahub-child/assets/img/mk-datahub-logo.png) no-repeat left center;
   padding: 20px 0 20px 40px;
 }
