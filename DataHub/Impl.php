@@ -132,7 +132,7 @@ function getDataset($key, $id) {
 		$i = getPostIdByUUID ( $id );
 		$return = array ();
 		$return ['id'] = $id;
-		$return ['type'] = mksis_getDatasetType ( $i );
+		$return ['type'] = \DataHub\Bindings\getDatasetType ( $i );
 		$return ['lastModified'] = get_post_modified_time ( 'U', false, $i );
 		$return ['created'] = get_post_time ( 'U', false, $i );
 		$return ['pageUrl'] = get_permalink ( $i );
