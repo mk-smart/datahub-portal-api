@@ -4,16 +4,11 @@
         "description": "This is the documentation of the MK:Smart Data Hub API. You can find out more about MK:Smart at [http://mksmart.org](http://mksmart.org)",
         "version": "1.0.0",
         "title": "MK Data Hub API",
-        "termsOfService": "http://datahub.mksmart.org",
-        "contact": {
-        },
-        "license": {
-        }
+        "termsOfService": "http://datahub.mksmart.org"
     },
     "schemes": [
         "http"
     ],
-    "host": "",
     "basePath": "/wordpress/api",
     "tags": [
         {
@@ -261,8 +256,7 @@
         "/dataset/{id}/feed": {
             "get": {
                 "tags": [
-                    "Data Catalogue",
-                    "Provide Data"
+                    "Data Catalogue"
                 ],
                 "summary": "Get Feed information",
                 "description": "Returns the feed section of a dataset metadata",
@@ -300,6 +294,271 @@
                     },
                     "404": {
                         "description": "Dataset not found",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error (unexpected)",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/dataset/{id}/links": {
+            "get": {
+                "tags": [
+                    "Data Catalogue"
+                ],
+                "summary": "Get the list of links",
+                "description": "Returns a list of links to external (re)sources for the dataset",
+                "operationId": "getDatasetLinks",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of dataset",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/HttpSource"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID supplied",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Dataset not found",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error (unexpected)",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/dataset/{id}/files/": {
+            "get": {
+                "tags": [
+                    "Data Catalogue"
+                ],
+                "operationId": "getFiles",
+                "description": "List of uploaded files",
+                "summary": "List of uploaded files",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of dataset",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns the list of files (metadata)",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/UploadedSource"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID supplied",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "File not found",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error (unexpected)",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/dataset/{id}/file/{fileId}": {
+            "get": {
+                "tags": [
+                    "Data Catalogue",
+                    "Provide Data"
+                ],
+                "operationId": "getFile",
+                "description": "Download file",
+                "summary": "Redirect to the file download URL",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of dataset",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "fileId",
+                        "in": "path",
+                        "description": "ID of the file",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "302": {
+                        "description": "Redirect to the file download URL",
+                        "schema": {
+                            "type": "file"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID supplied",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "File not found",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error (unexpected)",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/categories": {
+            "get": {
+                "tags": [
+                    "Data Catalogue",
+                    "Find Data"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Licenses",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error (unexpected)",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/licenses": {
+            "get": {
+                "tags": [
+                    "Data Catalogue",
+                    "Find Data"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Licenses",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "id": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
                         "schema": {
                             "$ref": "#/definitions/ApiResponse"
                         }
@@ -488,22 +747,28 @@
             "type": "object",
             "properties": {
                 "id": {
-                    "type": "string",
-                    "readOnly": true
+                    "type": "number",
+                    "readOnly": true,
+                    "description": "to be used to download the file"
                 },
                 "name": {
                     "type": "string",
                     "description": "Name of the file"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "mime-type": {
+                    "type": "string"
+                },
+                "apiUrl": {
+                    "type": "string"
                 }
             }
         },
         "HttpSource": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "string",
-                    "readOnly": true
-                },
                 "name": {
                     "type": "string",
                     "description": "Name of the file"
@@ -511,17 +776,6 @@
                 "url": {
                     "type": "string",
                     "description": "HTTP location of the file"
-                },
-                "updateRate": {
-                    "type": "string",
-                    "description": "Update rate",
-                    "enum": [
-                        "hour",
-                        "daily",
-                        "weekly",
-                        "notify"
-                    ],
-                    "default": "notify"
                 }
             }
         },
