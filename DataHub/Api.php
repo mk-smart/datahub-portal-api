@@ -143,7 +143,48 @@ $api->GET ( '/dataset/{id}/feed/', function (Request $request, $id) use($api) {
 	}
 	return $api->json ( $data );
 } );
-	
+
+$api->GET ( '/dataset/{id}/files/', function (Request $request, $id) use($api) {
+	$data = Impl\getDatasetFiles ( $api->getApiKey (), $id ) ;
+	if(!$data){
+		return $api->notFound();
+	}
+	return $api->json ( $data );
+} );
+
+
+$api->GET ( '/dataset/{id}/file/{fileId}/', function (Request $request, $id, $fileId) use($api) {
+	$redirectUrl = Impl\getDatasetFile ( $api->getApiKey (), $id, $fileId ) ;
+	if(!$redirectUrl){
+		return $api->notFound();
+	}
+	return $api->redirect ( $redirectUrl, 302 );
+} );
+
+$api->GET ( '/dataset/{id}/links/', function (Request $request, $id) use($api) {
+	$data = Impl\getDatasetLinks ( $api->getApiKey (), $id ) ;
+	if(!$data){
+		return $api->notFound();
+	}
+	return $api->json ( $data );
+} );
+
+$api->GET ( '/categories/', function (Request $request) use($api) {
+	$data = Impl\getCategories () ;
+	if(!$data){
+		return $api->notFound();
+	}
+	return $api->json ( $data );
+} );
+
+$api->GET ( '/licenses/', function (Request $request) use($api) {
+	$data = Impl\getLicenses () ;
+	if(!$data){
+		return $api->notFound();
+	}
+	return $api->json ( $data );
+} );
+
 // /////////////////////
 $api ['debug'] = true;
 $api->run ();

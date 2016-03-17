@@ -676,14 +676,14 @@
                     "description": "The url to the dataset feed json description (only type 'temporal')",
                     "readOnly": true
                 },
-                "uploads": {
+                "files": {
                     "type": "string",
-                    "description": "The url to the dataset uploads list json description (only type 'entities')",
+                    "description": "The url to the uploaded file list json description (only type 'entities')",
                     "readOnly": true
                 },
-                "urls": {
+                "links": {
                     "type": "string",
-                    "description": "The url to the dataset urls list json description (only type 'entities')",
+                    "description": "The url to the dataset links list json description (only type 'entities')",
                     "readOnly": true
                 },
                 "access": {

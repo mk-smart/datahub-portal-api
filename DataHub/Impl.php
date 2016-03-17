@@ -143,7 +143,7 @@ function getDataset($key, $id) {
 			$return ['feed'] = get_site_url () . '/api/dataset/' . $id . '/feed';
 		} else {
 			$return ['uploads'] = get_site_url () . '/api/dataset/' . $id . '/uploads';
-			$return ['urls'] = get_site_url () . '/api/dataset/' . $id . '/urls';
+			$return ['links'] = get_site_url () . '/api/dataset/' . $id . '/links';
 		}
 		return $return;
 	} else {
@@ -199,8 +199,7 @@ function getDatasetInfo($key, $id) {
 
 function getDatasetAccess($key, $id) {
 	$authorization = \DataHub\Bindings\getAuthorization($key, array($id));
-	
-  if ($authorization->canModify ( $id )) {
+	  if ($authorization->canModify ( $id )) {
 		// Chech whether can modify?
 		$policy = \DataHub\Bindings\getPolicy ( $id );
 		$policy = json_decode ( $policy, true );
@@ -208,4 +207,99 @@ function getDatasetAccess($key, $id) {
 	} else {
 		return FALSE;
 	}
+}
+
+function getDatasetFiles($key, $id) {
+	$authorization = \DataHub\Bindings\getAuthorization($key, array($id));
+	if ($authorization->canView ( $id )) {
+		$dc = DataAccess::instance();
+		$i = getPostIdByUUID($id);
+		$sources = $dc->getSources($i);
+		$uploads = array();
+		foreach($sources as $source){
+			if(isset($source['attachment_id'])){
+				$uploads[] = array(
+						'id' => $source['attachment_id'],
+						'title' => $source['title'],
+						'name' => $source['file']['name'],
+						'mime-type' => $source['file']['type'],
+						'apiUrl' => get_site_url () . '/api/dataset/' . $id . '/file/' . $source['attachment_id']
+				);
+			} 
+		}
+		return $uploads;
+	} else {
+		return FALSE;
+	}
+}
+
+function getDatasetFile($key, $id, $fileId) {
+	$authorization = \DataHub\Bindings\getAuthorization($key, array($id));
+	if ($authorization->canView ( $id )) {
+		$dc = DataAccess::instance();
+		$i = getPostIdByUUID($id);
+		$sources = $dc->getSources($i);
+		$uploads = array();
+		$found = FALSE;
+		foreach($sources as $source){
+			var_dump($source);
+			if(isset($source['attachment_id']) && $source['attachment_id'] == $fileId){
+				$found = TRUE;
+				break;
+			}
+		}
+		if($found){
+			return wp_get_attachment_url( $fileId );
+		}
+	}	
+	return FALSE;
+}
+
+function getDatasetLinks($key, $id) {
+	$authorization = \DataHub\Bindings\getAuthorization($key, array($id));
+	if ($authorization->canView ( $id )) {
+		$dc = DataAccess::instance();
+		$i = getPostIdByUUID($id);
+		$sources = $dc->getSources($i);
+		$links = array();
+		foreach($sources as $source){
+			if(!isset($source['attachment_id'])){
+				$links[] = $source;
+			} 
+		}
+		return $links;
+	} else {
+		return FALSE;
+	}
+}
+
+function getCategories(){
+	$dc = DataAccess::instance();
+	$categories = get_categories(array('type' => 'dataset', 'hide_empty' => 0));
+	$cats = array();
+	foreach($categories as $category){
+		$cats[] = $category->cat_name;
+	}
+	return $cats;
+}
+
+function getLicenses(){
+	$dc = DataAccess::instance();
+	// Prepare options once for all
+	$licenses = array();
+	$args=array('post_type' => 'mksdc-policies', 'nopaging' => true);
+	$my_query = new WP_Query($args);
+	if( $my_query->have_posts() ) {
+		while ($my_query->have_posts()) {
+			$my_query->the_post();
+			$licenses[]= array(
+					'name' => get_the_title(),
+					'id' => get_post()->post_name);
+		}
+	}
+	wp_reset_query();
+	return $licenses;
+	var_dump($dc->getLicensesSelectOptions());
+	return true;
+	
 }
