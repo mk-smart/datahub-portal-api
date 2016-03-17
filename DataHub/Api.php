@@ -3,6 +3,7 @@
 namespace DataHub;
 
 require_once __DIR__ . '/Bindings.php';
+require_once __DIR__ . '/Impl.php';
 
 use \Symfony\Component\HttpFoundation\Request as Request;
 use \Symfony\Component\HttpFoundation\Response as Response;
@@ -111,32 +112,32 @@ $api->GET ( '', function () use($api) {
 } );
 // //////////////////////
 $api->GET ( '/datasets/', function (Request $request) use($api) {
-	$fields = explode ( ',', $request->query->get ( 'fields', 'id,type,name' ) );
-	return $api->json ( Bindings\datasets ( $api->getApiKey (), $fields ) );
+	$fields = explode ( ',', urldecode($request->query->get ( 'fields', 'id,type,name' )) );
+	return $api->json ( Impl\getDatasets ( $api->getApiKey (), $fields ) );
 } );
 $api->GET ( '/dataset/{id}/', function (Request $request, $id) use($api) {
-	$data = Bindings\dataset ( $api->getApiKey (), $id ) ;
+	$data = Impl\getDataset ( $api->getApiKey (), $id ) ;
 	if(!$data){
 		return $api->notFound();
 	}
 	return $api->json ( $data );
 } );
 $api->GET ( '/dataset/{id}/info/', function (Request $request, $id) use($api) {
-	$data = Bindings\datasetInfo ( $api->getApiKey (), $id ) ;
+	$data = Impl\getDatasetInfo ( $api->getApiKey (), $id ) ;
 	if(!$data){
 		return $api->notFound();
 	}
 	return $api->json ( $data );
 } );
 $api->GET ( '/dataset/{id}/access/', function (Request $request, $id) use($api) {
-	$data = Bindings\datasetAccess ( $api->getApiKey (), $id ) ;
+	$data = Impl\getDatasetAccess ( $api->getApiKey (), $id ) ;
 	if(!$data){
 		return $api->forbidden();
 	}
 	return $api->json ( $data );
 } );
 $api->GET ( '/dataset/{id}/feed/', function (Request $request, $id) use($api) {
-	$data = Bindings\datasetFeed ( $api->getApiKey (), $id ) ;
+	$data = Bindings\getDatasetFeed ( $api->getApiKey (), $id ) ;
 	if(!$data){
 		return $api->notFound();
 	}

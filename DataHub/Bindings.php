@@ -1,23 +1,18 @@
 <?php
 namespace DataHub\Bindings;
 
-function datasets($key, $fields = array('id','type','apiUrl')){
-	return apply_filters('datahub_api_datasets', $key, $fields);
+function getUserFromKey($key){
+	return apply_filters('datahub_api_getUserFromKey', $key);
 }
-
-function dataset($key, $id){
-	return apply_filters('datahub_api_dataset', $key, $id);
+function getDatasetType($uuid){
+	return apply_filters('datahub_api_getDatasetType', $uuid);
 }
-
-function datasetInfo($key, $id){
-	return apply_filters('datahub_api_dataset_info', $key, $id);
+function getAuthorization($key, $uuids){
+	return apply_filters('datahub_api_getAuthorization', $key, $uuids);
 }
-
-function datasetAccess($key, $id){
-	return apply_filters('datahub_api_dataset_access', $key, $id);
+function getPolicy($uuid){
+	return apply_filters('datahub_api_getPolicy', $uuid);
 }
-
-
-function datasetFeed($key, $id){
-	return apply_filters('datahub_api_dataset_feed', $key, $id);
+function getDatasetFeed($key, $uuid){
+	return apply_filters('datahub_api_dataset_feed', $key, $uuid);
 }

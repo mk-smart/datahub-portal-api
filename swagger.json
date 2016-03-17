@@ -6,11 +6,8 @@
         "title": "MK Data Hub API",
         "termsOfService": "http://datahub.mksmart.org",
         "contact": {
-            "email": "enrico.daga@open.ac.uk"
         },
         "license": {
-            "name": "Apache 2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
         }
     },
     "schemes": [
@@ -260,8 +257,67 @@
                     }
                 ]
             }
+        },
+        "/dataset/{id}/feed": {
+            "get": {
+                "tags": [
+                    "Data Catalogue",
+                    "Provide Data"
+                ],
+                "summary": "Get Feed information",
+                "description": "Returns the feed section of a dataset metadata",
+                "operationId": "getDatasetStreamById",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of dataset to return",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/DatasetFeed"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID supplied",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Dataset not found",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error (unexpected)",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
         }
-        
     },
     "securityDefinitions": {
         "key": {
