@@ -1,6 +1,9 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-	RewriteBase /wordpress/api
+		RewriteBase /wordpress/api
+    RewriteRule ^$ docs [R=303,L]
+    RewriteCond %{REQUEST_URI} !(/$|\.)
+    RewriteRule (.*) $1/ [L,R=302]
     RewriteRule ^$ docs [R=303,L]
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d

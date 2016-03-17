@@ -40,7 +40,6 @@ class Api extends \Silex\Application {
 		parent::__construct ( $values );
 		$api = $this;
 		$this->error ( function (GetResponseForExceptionEvent $event) use($api) {
-			echo "MORTE";die;
 			// You get the exception object from the received event
 			$exception = $event->getException ();
 			$message = sprintf ( 'My Error says: %s with code: %s', $exception->getMessage (), $exception->getCode () );
@@ -70,11 +69,11 @@ class Api extends \Silex\Application {
 			$key = $request->getUser ();
 			if (! $key) {
 				// If in querystring
-				$key = $request->query->get ( "api_key", false );
+				$key = $request->query->get ( "key", false );
 			}
 			if (! $key) {
 				// If in request body/form
-				$request->request->get ( "api_key", false );
+				$request->request->get ( "key", false );
 			}
 			if ($key && $api->checkApiKey ( $key )) {
 				$api->setApiKey ( $key );
@@ -111,32 +110,32 @@ $api->GET ( '', function () use($api) {
 	return $api->redirect ( 'docs', 303 );
 } );
 // //////////////////////
-$api->GET ( '/datasets', function (Request $request) use($api) {
+$api->GET ( '/datasets/', function (Request $request) use($api) {
 	$fields = explode ( ',', $request->query->get ( 'fields', 'id,type,name' ) );
 	return $api->json ( Bindings\datasets ( $api->getApiKey (), $fields ) );
 } );
-$api->GET ( '/dataset/{id}', function (Request $request, $id) use($api) {
+$api->GET ( '/dataset/{id}/', function (Request $request, $id) use($api) {
 	$data = Bindings\dataset ( $api->getApiKey (), $id ) ;
 	if(!$data){
 		return $api->notFound();
 	}
 	return $api->json ( $data );
 } );
-$api->GET ( '/dataset/{id}/info', function (Request $request, $id) use($api) {
+$api->GET ( '/dataset/{id}/info/', function (Request $request, $id) use($api) {
 	$data = Bindings\datasetInfo ( $api->getApiKey (), $id ) ;
 	if(!$data){
 		return $api->notFound();
 	}
 	return $api->json ( $data );
 } );
-$api->GET ( '/dataset/{id}/access', function (Request $request, $id) use($api) {
+$api->GET ( '/dataset/{id}/access/', function (Request $request, $id) use($api) {
 	$data = Bindings\datasetAccess ( $api->getApiKey (), $id ) ;
 	if(!$data){
 		return $api->forbidden();
 	}
 	return $api->json ( $data );
 } );
-$api->GET ( '/dataset/{id}/feed', function (Request $request, $id) use($api) {
+$api->GET ( '/dataset/{id}/feed/', function (Request $request, $id) use($api) {
 	$data = Bindings\datasetFeed ( $api->getApiKey (), $id ) ;
 	if(!$data){
 		return $api->notFound();
