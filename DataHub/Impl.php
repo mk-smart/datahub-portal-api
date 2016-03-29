@@ -137,8 +137,8 @@ function getDataset($key, $id) {
 		$return ['created'] = get_post_time ( 'U', false, $i );
 		$return ['pageUrl'] = get_permalink ( $i );
 		$return ['apiUrl'] = get_site_url () . '/api/dataset/' . $id;
-		$return ['info'] = get_site_url () . '/api/dataset/' . $id;
-		$return ['access'] = get_site_url () . '/api/dataset/' . $id;
+		$return ['info'] = get_site_url () . '/api/dataset/' . $id . '/info';
+		$return ['access'] = get_site_url () . '/api/dataset/' . $id . '/access';
 		if ($return ['type'] == 'temporal') {
 			$return ['feed'] = get_site_url () . '/api/dataset/' . $id . '/feed';
 		} else {
